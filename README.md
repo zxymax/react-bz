@@ -126,3 +126,56 @@ class TodoItem extends Component {
 }
 
 ```
+
+### todolist优化
+
+```jsx
+// 将渲染出来的list封装成方法
+  getTodoItem() {
+    return this.state.list.map((item, index) => {
+      return (
+        <TodoItem 
+          delItem={this.handleDelItem}  
+          key={index} 
+          index={index}
+          content={item} 
+        />
+      )
+    })
+  }
+
+// 调用方法
+<ul>
+  { this.getTodoItem() } 
+</ul>
+```
+
+
+```jsx
+handleChange(e) {
+    const value = e.target.value // 需要对e.target.value进行保存一下
+    this.setState(() => ({ // 此处的setState是一个异步函数
+      inputValue: value
+    }))
+}
+
+handleClick() {
+  if (this.state.inputValue === '') return
+  this.setState((prevState) => ({ // 此处的参数prevState===等价于 this.state 是为了防止直接修改state的值
+    list: [...prevState.list, prevState.inputValue],
+    inputValue: ''
+  }))
+  // this.setState(() => ({
+  //   list: [...this.state.list, this.state.inputValue],
+  //   inputValue: ''
+  // }))
+}
+
+handleDelItem(_id) {
+  this.setState((prevState) => {
+    const list = [...prevState.list]
+    list.splice(_id, 1)
+    return { list }
+  })
+}
+```
