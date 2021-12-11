@@ -179,3 +179,17 @@ handleDelItem(_id) {
   })
 }
 ```
+
+#### PropTypes
+
+```jsx
+import PropTypes from 'prop-types'
+TodoItem.propTypes = {
+  content: PropTypes.string.isRequired
+}
+
+// week父组件没有传 默认传值
+TodoItem.defaultProps = {
+  week: 'sunday'
+}
+```jsx
