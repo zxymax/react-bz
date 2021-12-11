@@ -27,7 +27,9 @@ class TodoList extends Component {
     this.setState((prevState) => ({ // 此处的参数prevState===等价于 this.state 是为了防止直接修改state的值
       list: [...prevState.list, prevState.inputValue],
       inputValue: ''
-    }))
+    }), () =>{
+      console.log(this.ul.querySelectorAll('li').length)
+    })
     // this.setState(() => ({
     //   list: [...this.state.list, this.state.inputValue],
     //   inputValue: ''
@@ -65,7 +67,7 @@ class TodoList extends Component {
           onChange={this.handleChange} 
         />
         <button onClick={this.handleClick}>Add</button>
-        <ul>
+        <ul ref={(ul) => {this.ul = ul}}>
           { this.getTodoItem() } 
         </ul>
       </div>
