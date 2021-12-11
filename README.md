@@ -193,3 +193,67 @@ TodoItem.defaultProps = {
   week: 'sunday'
 }
 ```jsx
+
+> - 当父组件的render函数被执行时它的子组件的render都将被重新运行
+
+#### 虚拟DOM (虚拟DOM就是一个JS对象，用它来描述真实DOM)
+- 1. state - 数据
+- 2. jsx模板
+- 3. state数据 + jsx模板 结合生成真实的DOM
+- 4. state 若发生改变
+- 5. state数据 + jsx模板 结合生成真实的DOM，替换原来的DOM
+> 缺陷：
+> > - 第一次生成了一个完整的DOM片段
+> > - 第二次生成了一个完整的DOM片段
+> > - 第二次的DOM替换第一次的DOM非常消耗性能
+
+- 1. state - 数据
+- 2. jsx模板
+- 3. state数据 + jsx模板 结合生成真实的DOM
+- 4. state 若发生改变
+- 5. state数据 + jsx模板 结合生成真实的DOM，并不替换原来的DOM
+- 6. 新的DOM 和原来的DOM做对比
+- 7. 找出局部变化了元素
+- 8. 只用新的DOM中发生变化了的局部元素，替换掉老的DOM中的被改变的局部元素
+> 缺陷：
+> > - 性能提升不明显
+
+- 1. state - 数据
+- 2. jsx模板
+- 3. state数据 + jsx模板 结合生成虚拟DOM
+```js
+['div', {id: 'abc'}, {'span', {}, 'hello span'}]
+```
+- 4. 用虚拟DOM的结构生成真实的DOM
+```html
+<div id="abc"><span>hello span<span></div>
+```
+- 5. state 若发生改变
+- 6. state数据 + jsx模板生成新的虚拟DOM (极大的提升了性能)
+```js
+['div', {id: 'abc'}, {'span', {}, 'bye span'}]
+```
+- 7. 比较原始虚拟DOM和新的虚拟DOM的区别，找出区别是span中的内容
+- 8. 直接操作DOM，改变span中的内容
+> 优点：
+> > - 性能提升了(DOM的比对是JS对象之间的比对)
+> > - 它是的跨端应用得以实现，React Native
+
+### Diff
+- React的虚拟DOM是同层比对的
+
+#### Ref 尽量避免使用
+- ref是帮助在React里面直接获取DOM元素的时候来使用的
+- 比如在做动画的时候使用获取DOM元素
+- ref和setState一起用的时候 setState异步函数 在setState第二个参数回调函数使用
+```jsx
+handleClick() {
+  if (this.state.inputValue === '') return
+  this.setState((prevState) => ({ // 此处的参数prevState===等价于 this.state 是为了防止直接修改state的值
+    list: [...prevState.list, prevState.inputValue],
+    inputValue: ''
+  }), () =>{
+    console.log(this.ul.querySelectorAll('li').length)
+  })
+}
+```
