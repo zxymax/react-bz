@@ -51,3 +51,25 @@
   }
 
 ```
+
+#### jsx注释
+```jsx
+{ 
+   // todolist
+}
+{
+   /**
+     * todolist
+     * */
+}
+```
+
+#### clasName 定义Css样式类名
+#### dangerouslySetInnerHTML 是React为浏览器DOM提供innerHTML的替换方案
+- __html 是两个下划线 item为内容
+```jsx
+this.state.list.map((item, index) => {
+  return <li dangerouslySetInnerHTML={{__html: item}}></li>
+  })
+```
+#### htmlFor 替代了label中的for 

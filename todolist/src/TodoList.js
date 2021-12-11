@@ -39,13 +39,22 @@ class TodoList extends Component {
   render() {
     return (
       <div>
-        <input type="text" value={this.state.inputValue} onChange={this.handleChagne.bind(this)} />
+         { 
+           // todolist
+         }
+         {
+           /**
+             * todolist
+             * */
+         }
+        <label htmlFor="insertContent">input your content:</label><input id="insertContent" className="input-border" type="text" value={this.state.inputValue} onChange={this.handleChagne.bind(this)} />
         <button onClick={this.handleClick}>Button</button>
-        <p>{this.state.inputValue}</p>
+        <p dangerouslySetInnerHTML={{__html: this.state.inputValue}}></p>
         <ul>
           {
             this.state.list.map((item, index) => {
-              return <li onClick={this.handleItemDel.bind(this, index)} key={index}>{item}</li>
+              return <li onClick={this.handleItemDel.bind(this, index)} key={index}
+                  dangerouslySetInnerHTML={{__html: item}}></li>
             })
           }
       </ul>
