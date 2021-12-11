@@ -48,5 +48,4 @@ class TodoItem extends Component {
     return <li onClick={this.handleClick}>{this.props.content}</li>
   }
 }
-
 ```
