@@ -257,3 +257,48 @@ handleClick() {
   })
 }
 ```
+
+#### 生命周期
+- componentWillMount() React 17版本以弃用
+- render()
+- componentDidMount() 组件加载页面之后自动执行
+- shouldComponentUpdate() 组件更新之前自动执行 返回boolean值
+```jsx
+// TodoItem.js 子组件
+shouldComponentUpdate(nextProps, nextState) {
+  if (nextProps.content !== this.props.content) {
+    return true
+  } else {
+    return false
+  }
+}
+```
+- componentWillUpdate(nextProps, nextState) 是否执行取决于 shouldComponentUpdate的值 true执行 false不执行
+- componentWillReceiveProps 1 从父组件接收到参数 2 如果这个组件第一次存在于父组件中，不会执行 3 如果这个组件之前已经存在于父组件中，才会执行
+- componentDidUpdate()  除了首次render之后调用的是componentDidMount 其他render结束之后调用的都是componentDidUpdate
+- componentWillUnmount() 组件卸载之前执行
+
+#### charles软件实现本地模拟数据
+
+#### axios 请求数据 axios放在componentDidMount函数里
+
+```jsx
+componentDidMount() {
+  console.log('componentDidMount: 组件被挂载页面之后自动执行')
+  axios.get('https://jsonplaceholder.typicode.com/posts')
+    .then((data) => {  
+      const arr = data.data.map((item, i) => {
+        if (i < 10) {
+          return JSON.stringify(item)
+        }
+      })
+      console.log()
+      this.setState((prevState)=> {
+        return {
+          list: [...prevState.list, arr]
+        }
+      })
+    })
+    .catch(err => console.log(err))
+}
+```
