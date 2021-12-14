@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import { CSSTransition } from "react-transition-group";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      show: true,
+      list: [],
     };
 
     this.changeStatus = this.changeStatus.bind(this);
@@ -13,7 +13,7 @@ class App extends Component {
 
   changeStatus() {
     this.setState((prevState) => ({
-      show: !prevState.show,
+      list: [...prevState.list, "item"],
     }));
   }
 
@@ -21,18 +21,25 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <CSSTransition
-            in={this.state.show}
-            timeout={1000}
-            classNames="fade"
-            unmountOnExit
-            onEntered={(el) => {
-              el.style.color = "red";
-            }}
-            appear={true}
-          >
-            <h3> CSS3 transition </h3>
-          </CSSTransition>
+          <TransitionGroup>
+            {this.state.list.map((item, index) => {
+              return (
+                <CSSTransition
+                  in={this.state.show}
+                  timeout={1000}
+                  classNames="fade"
+                  unmountOnExit
+                  onEntered={(el) => {
+                    el.style.color = "red";
+                  }}
+                  appear={true}
+                  key={index}
+                >
+                  <h3>{item} CSS3 transition </h3>
+                </CSSTransition>
+              );
+            })}
+          </TransitionGroup>
           <h3 className={this.state.show ? "other-show" : "other-hide"}>
             Other CSS3 transition
           </h3>
