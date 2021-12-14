@@ -476,3 +476,35 @@ handleChange(e) {
 ```
 
 注意： [订阅放在构造函数里会报错 ](https://stackoverflow.com/questions/70348240/warning-cant-call-setstate-on-a-component-that-is-not-yet-mounted-this-is-a-n#comment124354616_70348240)
+
+- 创建 actionTypes.js
+```js
+export const CHANGE_INPUT_VALUE = "change_input_value";
+```
+- action分离 创建actionCreators.js文件
+- 导入常量actionTypes.js
+```js
+import {
+  CHANGE_INPUT_VALUE
+} from "./actionTypes";
+
+export const getInputChangeAction = (value) => ({
+  type: CHANGE_INPUT_VALUE,
+  value,
+});
+
+```
+- 组件使用
+```jsx
+import {
+  getInputChangeAction,
+  getAddItemAction,
+  getDeleteItemAction,
+} from "./store/actionCreators";
+
+handleInputChange(e) {
+  const action = getInputChangeAction(e.target.value);
+  store.dispatch(action);
+}
+```
+> createStore -> store.dispatch -> store.getState -> store.subscribe
