@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { CSSTransition } from "react-transition-group";
 
 class App extends Component {
   constructor(props) {
@@ -20,7 +21,18 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <h3 className={this.state.show ? "show" : "hide"}>CSS3 transition</h3>
+          <CSSTransition
+            in={this.state.show}
+            timeout={1000}
+            classNames="fade"
+            unmountOnExit
+            onEntered={(el) => {
+              el.style.color = "red";
+            }}
+            appear={true}
+          >
+            <h3> CSS3 transition </h3>
+          </CSSTransition>
           <h3 className={this.state.show ? "other-show" : "other-hide"}>
             Other CSS3 transition
           </h3>
