@@ -412,3 +412,4 @@ changeStatus() {
 - Redux = Reducer + Flux
 #### Redux Flow
 [Redux Flow](./redux.png)
+![alt Redux Flow](./redux.png)
