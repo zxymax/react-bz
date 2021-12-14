@@ -327,3 +327,49 @@ componentDidMount() {
     .catch(err => console.log(err))
 }
 ```
+#### CSS Transition 动画 第三方库 react-transition-group
+- yarn add react-transition-group
+```jsx
+import { CSSTransition } from 'react-transition-group'
+
+construcotr(props) {
+  super(props)
+  this.state {
+    show: true
+  }
+}
+
+changeStatus() {
+  this.setState((prevState) => ({
+    show: !prevState.show,
+  }));
+}
+
+<CSSTransition in={this.state.show} timeout={1000}>
+<h1>Hello React</h1>
+</CSSTransition>
+<button onClick={this.changeStatus}>CHANGE STATUS</button>
+```
+```css
+.fade-enter {
+  opacity: 0;
+}
+.fade-enter-active {
+  opacity: 1;
+  transition: opacity 1s ease-in;
+}
+.fade-enter-done {
+  opacity: 1;
+}
+
+.fade-exit {
+  opacity: 1;
+}
+.fade-exit-active {
+  opacity: 0;
+  transition: opacity 1s ease-in;
+}
+.fade-exit-done {
+  opacity: 0;
+}
+```
