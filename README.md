@@ -413,3 +413,66 @@ changeStatus() {
 #### Redux Flow
 [Redux Flow](./redux.png)
 ![alt Redux Flow](./redux.png)
+
+- yarn add redux 安装redux
+> Store的创建
+> > src/store/index.js 
+```js
+import { createStore } from 'redux'
+import reducer from './reducer' // 将笔记本引入进来
+const store = createStore(reducer) // 将reducer传给store 此时的store对仓库数据一目了然
+
+export default store
+```
+- store 相当于图书馆的管理员，需要一个笔记本来辅助自己管理数据reducer
+
+> > src/store/reducer.js 笔记本创建
+```js
+// reducer.js 需要返回一个函数
+// state仓库里所有的数据
+// action 指的是用户从组件那边传过来的那句话
+const defaultState = {
+  inputValue: '',
+  list: []
+}
+// reducer的作用是 reducer把处理过的信息返回一个新的数据给store
+export default (state = defaultState, action) => {
+  if(action.type === 'change_input_value') {
+    // 首先拷贝之前store里面的数据
+    const newState = JSON.parse(JSON.stringify(state)) //深拷贝state的数据
+    newState.inputValue = action.value // action.value是传过来的值
+    return newState // 将内容返回 替换了原来store里的数据 固定写法
+  }
+  return state
+}
+```
+
+> > 接下来是组件连接store
+```jsx
+import store from './store' // 引入store
+
+constructor(props) {
+  super(props)
+  this.state = store.getStore() // 获取store里的数据
+}
+componentDidMount() {
+ // 订阅：当store数据发生改变之后 组件内容也需要更新变化，这时就需要store.subscribe订阅
+ // 只要store发生改变 接收的参数方法就会自动执行一次
+  store.subscribe(this.handleStoreChange) // 订阅store
+}
+
+handleStoreChange() {
+ // 只要store发生变化 组件也就跟着变化
+ this.setState(store.getState()) // 重新更新store的数据替换state的数据
+}
+
+handleChange(e) {
+  const action = { // 告诉redux要做的事情 type必传
+    type: 'change_input_value',
+    value: e.target.value
+  }
+  store.dispatch(action) // 将这件事情告诉store
+}
+```
+
+注意： [订阅放在构造函数里会报错 ](https://stackoverflow.com/questions/70348240/warning-cant-call-setstate-on-a-component-that-is-not-yet-mounted-this-is-a-n#comment124354616_70348240)
