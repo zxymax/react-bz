@@ -373,3 +373,37 @@ changeStatus() {
   opacity: 0;
 }
 ```
+- 多个组件使用动画库 需要引入 TransitionGroup
+```jsx
+import { CSSTransition, TransitionGroup } from "react-transition-group";
+
+this.state = {
+  list: []
+}
+
+changeStatus() {
+  this.setState((prevState) => ({
+    list: [...prevState.list, "item"],
+  }));
+}
+
+<TransitionGroup>
+  {this.state.list.map((item, index) => {
+    return (
+      <CSSTransition
+        in={this.state.show}
+        timeout={1000}
+        classNames="fade"
+        unmountOnExit
+        onEntered={(el) => {
+          el.style.color = "red";
+        }}
+        appear={true}
+        key={index}
+      >
+        <h3>{item} CSS3 transition </h3>
+      </CSSTransition>
+    );
+  })}
+</TransitionGroup>
+```
