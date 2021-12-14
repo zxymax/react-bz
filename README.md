@@ -407,3 +407,8 @@ changeStatus() {
   })}
 </TransitionGroup>
 ```
+
+### Redux
+- Redux = Reducer + Flux
+#### Redux Flow
+[Redux Flow](./redux.png)
