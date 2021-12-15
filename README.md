@@ -742,3 +742,78 @@ componentDidMount() {
   store.dispatch(action);
 }
 ```
+
+### redux-saga 中间件用法
+> 配置saga 引入 redux-saga
+```js
+import { createStore, applyMiddleware, compose } from "redux";
+import reducer from "./reducer";
+import createSagaMiddleware from "redux-saga";
+import todoSagas from "./saga";
+
+const sagaMiddleware = createSagaMiddleware();
+
+const composeEnhancers =
+  typeof window === "object" && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
+    : compose;
+const enhancer = composeEnhancers(applyMiddleware(sagaMiddleware));
+
+const store = createStore(reducer, enhancer);
+sagaMiddleware.run(todoSagas);
+
+export default store;
+```
+
+> 创建saga.js
+```js
+import { put, takeEvery } from "redux-saga/effects";
+import axios from "axios";
+import { GET_LIST } from "./actionTypes";
+import { getInitDataList } from "./actionCreators";
+
+function* getInitList() {
+  const arr = [];
+  try {
+    const res = yield axios.get("https://jsonplaceholder.typicode.com/todos");
+    res.data.map((item, index) => {
+      if (index < 10) {
+        arr.push(item.title);
+      }
+    });
+    const action = getInitDataList(arr);
+    yield put(action);
+  } catch (e) {
+    console.log(e, "网络请求失败");
+  }
+}
+
+function* todoSagas() {
+  yield takeEvery(GET_LIST, getInitList);
+}
+
+export default todoSagas;
+```
+> actionTypes.js新建常量GET_LIST 
+```js
+export const GET_LIST = "get_list";
+```
+> actionCreators.js 新建方法getList
+```js
+import { GET_LIST, } from "./actionTypes"; // 导入常量
+export const getList = () => ({
+  type: GET_LIST,
+});
+```
+> TodoList.js 组件中调用getList
+```jsx
+import { getList } from "./store/actionCreators";
+// componentDidMount 钩子函数中调用getList
+componentDidMount() {
+  store.subscribe(this.handleStoreChange);
+  const action = getList();
+  store.dispatch(action);
+}
+```
+
+
