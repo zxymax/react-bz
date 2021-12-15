@@ -689,6 +689,7 @@ export const getInitDataList = (data) => ({
       .catch((err) => console.log(err));
   }
 ```
+![alt Redux Data Flow](./redux-data-flow.png)
 
 #### redux-thunk中间件的使用
 - 需要进入 github 复制相关代码 [zalmoxisus / redux-devtools-extension](https://github.com/zalmoxisus/redux-devtools-extension)
