@@ -689,3 +689,55 @@ export const getInitDataList = (data) => ({
       .catch((err) => console.log(err));
   }
 ```
+
+#### redux-thunk中间件的使用
+- 需要进入 github 复制相关代码 [zalmoxisus / redux-devtools-extension](https://github.com/zalmoxisus/redux-devtools-extension)
+- 修改store/index.js 导入中间件 thunk
+```jsx
+import { createStore, applyMiddleware, compose } from "redux";
+import reducer from "./reducer";
+import thunk from "redux-thunk";
+
+const composeEnhancers =
+  typeof window === "object" && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
+    : compose;
+
+const enhancer = composeEnhancers(applyMiddleware(thunk));
+
+const store = createStore(reducer, enhancer);
+
+export default store;
+```
+- store/actionCreators.js 添加异步数据处理 将原来组件中的componentDidMount请求的数据拿过来
+```js
+export const getTodoList = () => {
+  return (dispatch) => {
+    axios
+      .get("https://jsonplaceholder.typicode.com/todos")
+      .then((res) => {
+        console.log(res.data[0]);
+        const arr = [];
+        res.data.map((item, index) => {
+          if (index < 10) {
+            arr.push(item.title);
+          }
+        });
+        const action = getInitDataList(arr);
+        dispatch(action);
+      })
+      .catch((err) => console.log(err));
+  };
+};
+```
+- TodoList.js 组件中导入 getTodoList方法
+```jsx
+
+import { getTodoList, } from "./store/actionCreators";
+
+componentDidMount() {
+  store.subscribe(this.handleStoreChange);
+  const action = getTodoList();
+  store.dispatch(action);
+}
+```
