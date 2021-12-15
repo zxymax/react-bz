@@ -635,3 +635,57 @@ const TodoListUI = (props) => {
   );
 };
 ```
+
+#### Redux中发送异步请求获取数据
+- actionTypes.js中增加常量
+```js
+// actionTypes.js
+export const INITDATA = "init_data";
+```
+- actionCreators.js中增加添加方法
+```js
+// actionCreators.js
+export const getInitDataList = (data) => ({
+  type: INITDATA,
+  data,
+});
+```
+- reducer.js添加
+```js
+// reducer.js
+ // 更新增加todo的方法
+  if (action.type === ADD_TODO_ITEM) {
+    const newState = JSON.parse(JSON.stringify(state));
+    newState.list = [...newState.list, newState.inputValue];
+    newState.inputValue = "";
+    return newState;
+  }
+  // 增加异步请求过来的数据 与 增加的数据合并
+  if (action.type === INITDATA) {
+    const newState = JSON.parse(JSON.stringify(state));
+    newState.list = [...newState.list, ...action.data];
+    return newState;
+  }
+```
+- TodoList.js组件增加异步数据
+```jsx
+// TodoList.js
+  componentDidMount() {
+    store.subscribe(this.handleStoreChange);
+    axios
+      .get("https://jsonplaceholder.typicode.com/todos")
+      .then((res) => {
+        console.log(res.data[0]);
+        const arr = [];
+        res.data.map((item, index) => {
+          if (index < 10) {
+            arr.push(item.title);
+          }
+        });
+        const action = getInitDataList(arr);
+        store.dispatch(action);
+        console.log(this.state);
+      })
+      .catch((err) => console.log(err));
+  }
+```
