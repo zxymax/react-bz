@@ -508,3 +508,130 @@ handleInputChange(e) {
 }
 ```
 > createStore -> store.dispatch -> store.getState -> store.subscribe
+
+#### 一个组件被拆分成UI组件和容器组件
+```jsx
+// 创建 TodoListUI.js UI组件
+class TodoListUI extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <div>
+        <Input
+          placeholder="Basic usage"
+          style={{ width: "300px", marginRight: "5px" }}
+          value={this.props.inputValue}
+          onChange={this.props.handleChange}
+        />
+        <Button type="primary" onClick={this.props.handleClick}>
+          Add information
+        </Button>
+        <List
+          size="large"
+          style={{ width: "300px", marginTop: "5px" }}
+          bordered
+          dataSource={this.props.list}
+          renderItem={(item, index) => (
+            <List.Item
+              onClick={(index) => {
+                this.props.handleDeleteItem(index);
+              }}
+            >
+              {item}
+            </List.Item>
+          )}
+        />
+      </div>
+    );
+  }
+}
+
+
+```jsx
+const TodoListUI = (props) => {
+  return (
+    <div>
+      <Input
+        placeholder="Basic usage"
+        style={{ width: "300px", marginRight: "5px" }}
+        value={props.inputValue}
+        onChange={props.handleChange}
+      />
+      <Button type="primary" onClick={props.handleClick}>
+        Add information
+      </Button>
+      <List
+        size="large"
+        style={{ width: "300px", marginTop: "5px" }}
+        bordered
+        dataSource={props.list}
+        renderItem={(item, index) => (
+          <List.Item
+            onClick={(index) => {
+              props.handleDeleteItem(index);
+            }}
+          >
+            {item}
+          </List.Item>
+        )}
+      />
+    </div>
+  );
+};
+```
+```jsx
+// 引入TodoListUI.js
+import TodoListUI from "./TodoListUI";
+class TodoList extends Component {
+  render() {
+    return (
+      <TodoListUI
+        inputValue={this.state.inputValue}
+        list={this.state.list}
+        handleChange={this.handleChange}
+        handleClick={this.handleClick}
+        handleDeleteItem={this.handleDeleteItem}
+      />
+    );
+  }
+}
+```
+
+#### 无状态组件 效率高 props使用去掉this
+- 当一个普通组件只有render函数的时候 可以通过无状态组件来替换普通组件
+- 无状态组件性能高
+```jsx
+const TodoListUI = (props) => {
+  return (
+    <div>
+      <Input
+        placeholder="Basic usage"
+        style={{ width: "300px", marginRight: "5px" }}
+        value={props.inputValue}
+        onChange={props.handleChange}
+      />
+      <Button type="primary" onClick={props.handleClick}>
+        Add information
+      </Button>
+      <List
+        size="large"
+        style={{ width: "300px", marginTop: "5px" }}
+        bordered
+        dataSource={props.list}
+        renderItem={(item, index) => (
+          <List.Item
+            onClick={(index) => {
+              props.handleDeleteItem(index);
+            }}
+          >
+            {item}
+          </List.Item>
+        )}
+      />
+    </div>
+  );
+};
+```
