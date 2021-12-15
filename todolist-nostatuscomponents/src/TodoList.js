@@ -1,9 +1,11 @@
 import React, { Component } from "react";
+import axios from "axios";
 import store from "./store";
 import {
   getInputChangeValue,
   getAddTodoItem,
   getDeleteItem,
+  getInitDataList,
 } from "./store/actionCreators";
 
 import TodoListUI from "./TodoListUI";
@@ -21,7 +23,21 @@ class TodoList extends Component {
 
   componentDidMount() {
     store.subscribe(this.handleStoreChange);
-    console.log(this.state);
+    axios
+      .get("https://jsonplaceholder.typicode.com/todos")
+      .then((res) => {
+        console.log(res.data[0]);
+        const arr = [];
+        res.data.map((item, index) => {
+          if (index < 10) {
+            arr.push(item.title);
+          }
+        });
+        const action = getInitDataList(arr);
+        store.dispatch(action);
+        console.log(this.state);
+      })
+      .catch((err) => console.log(err));
   }
 
   handleChange(e) {
