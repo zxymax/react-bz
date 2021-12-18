@@ -816,4 +816,51 @@ componentDidMount() {
 }
 ```
 
+#### react-redux
+> 创建store后，可以通过src/index.js中的应用程序放置一个react-redux <Prpvider> 使其可用于React组件，导入store 并将store 作为props传递
+```js
+// src/index.js
+import store from './app/store'
+import { Provider } from 'react-redux'
+
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('root')
+)
+```
+> connect() 函数将React组件连接到Redux存储 它的连接组件提供它需要来自store的数据片段，以及可以用来将动作分派到store的功能，它不会修改传递给它的组件类，相反，它返回一个新的，连接组件类，该类包含传入的组件
+> connect 接收四个参数: 
+> > - mapStateToProps: Function
+> > - mapDispatchToProps: Function | Object
+> > - mergeProps?: Function
+> > - options?: Object
+
+> mapStateToProps和mapDispatchToProps分别处理redux存储的状态和调度。state和dispatch将作为第一个参数提供给mapStateToProps和mapDispatchToProps函数
+```js
+// src/TodoList.js
+import { connect } from "react-redux";
+
+const mapStateToProps = (state) => {
+  return {
+    inputValue: state.inputValue,
+    list: state.list,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    handleChangeInput(e) {
+      const action = {
+        type: CHANGE_INPUT_VALUE,
+        value: e.target.value,
+      };
+      dispatch(action);
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(TodoApp)
+```
 
